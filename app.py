@@ -358,17 +358,17 @@ app = Flask(__name__)
 
 app.add_url_rule('/tool', 'webio_view', webio_view(choices),
             methods=['GET', 'POST', 'OPTIONS'])
-app.run(host='localhost', port=80)
+# app.run(host='localhost', port=80)
 
 
-# if __name__ == '__main__':
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument("-p", "--port", type=int, default=8080)
-#     args = parser.parse_args()
-
-#     start_server(predict, port=args.port)
 if __name__ == '__main__':
-    choices()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--port", type=int, default=8080)
+    args = parser.parse_args()
+
+    start_server(choices, port=args.port)
+# if __name__ == '__main__':
+#     choices()
 
 
 # In[24]:
