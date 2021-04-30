@@ -1,2 +1,2 @@
 # DesiSafar
-IR Project
+Travel Destination Recommendation System [Python + PyWebIO + Flask + Heroku]
