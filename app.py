@@ -273,6 +273,8 @@ def check_log_in(data):
         put_text('Wrong PIN or account number')
         found = 0
         return('user_id','Invalid Details')
+    if(found==0):
+        return('user_id','Invalid Details')
     
 def insert_details(info):
     conn = sqlite3.connect('test2.db')
