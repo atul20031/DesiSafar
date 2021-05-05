@@ -26,7 +26,8 @@ from pywebio.input import *
 from pywebio.output import *
 import pywebio.session
 from pywebio import start_server
-
+import pickle
+import sqlite3
 import time
 from pywebio.platform.flask import webio_view
 from pywebio import STATIC_PATH
@@ -36,6 +37,13 @@ nltk.download('wordnet')
 from rank_bm25 import BM25Okapi
 dataset2 = pd.read_csv('wiki_voyage_correct.csv')
 dataset1 = pd.read_csv('final_dataset_wo_duplicates.csv')
+conn = sqlite3.connect('test2.db')
+conn.execute('''CREATE TABLE IF NOT EXISTS user_details
+             (User_id INTEGER PRIMARY KEY     AUTOINCREMENT,
+             Name           TEXT    NOT NULL,
+             Age            INT     NOT NULL,
+             State        CHAR(50)  NOT NULL,
+             Pin CHAR(50));''')
 main_document_scores=[]
 def word2vec_sim_score(q,doc_list):
   if len(doc_list) ==287:
