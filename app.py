@@ -74,17 +74,30 @@ document_list=[]
 lemmatizer = WordNetLemmatizer() 
 i=0
 cities = dataset2['City']
-for i in range(dataset2.shape[0]):
-  k= cities[i]
-  document = ' description of '+ k + dataset2.iloc[i]['description']+'Places to visit in '+k  +str(dataset2.iloc[i]['sites']) + '\n how to reach '+ k+str(dataset2.iloc[i]['how to reach']) + '\n best time to visit'+k+dataset2.iloc[i]['best to time visit'] + ' '+dataset2.iloc[i]['wiki voyage']
-  document = document.lower()
-  input_str = document
-  translator = str.maketrans('', '', string.punctuation) 
-  document = document.translate(translator) 
-  document=lemmatizer.lemmatize(document)
+try:
+    with open('document_list.pkl', 'rb') as file:
+      
+    # Call load method to deserialze
+        document_list = pickle.load(file)
 
-  document_list.append(document)
-  i+=1
+except:
+    for i in range(dataset2.shape[0]):
+      k= cities[i]
+      document = ' description of '+ k + dataset2.iloc[i]['description']+'Places to visit in '+k  +str(dataset2.iloc[i]['sites']) + '\n how to reach '+ k+str(dataset2.iloc[i]['how to reach']) + '\n best time to visit'+k+dataset2.iloc[i]['best to time visit'] + ' '+dataset2.iloc[i]['wiki voyage']
+      document = document.lower()
+      input_str = document
+      translator = str.maketrans('', '', string.punctuation) 
+      document = document.translate(translator) 
+      document=lemmatizer.lemmatize(document)
+
+      document_list.append(document)
+      i+=1
+
+
+    with open('document_list.pkl', 'wb') as file:
+
+        # A new file will be created
+        pickle.dump(document_list, file)
 
 total_tags = []
 total_tags.append(dataset1['historical & heritage'].value_counts())
@@ -151,7 +164,7 @@ def fun():
     put_image(img, width='1500px')
     
 def select_recommendation_system():
-    recommendation_system = select('Which type of recommendation system would you prefer?', ['BM25 based Recommendation System', 'TF-IDF(Content based)','Count-Vectorizer(Content Based)','Word2Vec(Content Based)'])
+    recommendation_system = select('Which type of recommendation system would you prefer?', ['BM25 based Recommendation System', 'TF-IDF(Content based)','Count-Vectorizer(Content Based)','Word2Vec(Content Based)','Collaborative Filtering'])
     #BM25 based Recommendation System
     if(recommendation_system == 'BM25 based Recommendation System'):
         put_text('BM25 based Recommendation System is a free text based recommendation system.')
@@ -219,6 +232,108 @@ def select_recommendation_system():
             display_recommendations(doc_scores)   
         except Exception as ex:
             put_text(ex)
+    if(recommendation_system == 'Collaborative Filtering')  :
+        account_status = select('Log in or sign up?', ['Log in','Sign Up','Home'])
+        if(account_status == 'Log in'):
+            log_in_page()
+        if(account_status == 'Sign Up'):
+            put_text('Sign up selected')
+            sign_up_page()
+        if(account_status== 'Home'):
+            choices()
+            
+def check_form(data):  # input group validation: return (input name, error msg) when validation fail
+        if len(data['name']) > 20:
+            return ('name', 'Name too long!')
+        if data['age'] <= 0:
+            return ('age', 'Age can not be negative!')     
+        if data['age'] >= 130:
+            return ('age','Enter valid age')
+        
+def check_log_in(data):
+    conn = sqlite3.connect('test2.db')
+    user_id = data['user_id']
+    pin = data['password']
+    cursor = conn.execute('Select Pin from user_details where user_id=?', (user_id,))
+    found=0
+    for row in cursor:
+      if (row[0] == pin):
+        put_text('Successful LOGIN')
+        found = 1
+        
+      else:
+        put_text('Wrong PIN or account number')
+        found = 0
+        return('user_id','Invalid Details')
+    
+def insert_details(info):
+    conn = sqlite3.connect('test2.db')
+    logf = open("insert.log", "w")
+#     put_text('Inside insert details',info)
+    name = str(info['name'])
+    age = int(info['age'])
+    pin = str(info['password'])
+    state = str(info['state'])
+    try:
+        conn.execute("INSERT INTO user_details (Name,Age, State,Pin) VALUES (?, ?, ?, ?)",
+                             (name, age, state,pin))
+        conn.commit()
+        cursor = conn.execute("SELECT * FROM user_details ORDER BY user_id DESC LIMIT 1")
+        put_text('Insert successful')
+    except Exception as ex:
+        put_text(ex)
+        logf.write("Failed to insert {0}:"+ex)
+    try:
+        for row in cursor:
+            put_text('Please note your User ID:  ', row[0])
+            account_number=int(row[0])
+    except Exception as ex:
+        put_text(ex)
+    popup('Please note your u=User ID : '+str(account_number))
+    put_buttons(['Home'], onclick=[choices])
+    put_buttons(['Explore'], onclick=[select_recommendation_system])
+    
+    
+def log_in_page():
+    clear()
+    img = open('Images/DesiSafar Logo.jpg', 'rb').read()
+    put_image(img, width='900px')
+    put_markdown('# **Log In**')
+    put_buttons(['Home'], onclick=[choices])
+    put_buttons(['Explore'], onclick=[select_recommendation_system])
+    info = input_group("User info",[
+  input('User Id', name='user_id',type = NUMBER,required=True),
+  
+        input('Password', type=PASSWORD, name='password', required=True)
+       
+],validate=check_log_in)
+    pywebio.session.hold()
+
+    
+def sign_up_page():
+    clear()
+    img = open('Images/DesiSafar Logo.jpg', 'rb').read()
+    put_image(img, width='900px')
+    put_markdown('# **Sign UP**')
+#     data = input_group("Basic info", [
+#         input('Input your name', name='name'),
+#         input('Input your age', name='age', type=NUMBER)
+#     ], validate=check_form)
+#     put_markdown("`data = %r`" % data)
+        
+    info = input_group("User info",[
+  input('Name', name='name',required=True),
+  input('Input your age', name='age', type=NUMBER,required=True,),
+        input('password', type=PASSWORD, name='password', required=True),
+        select('Select your state',["Andhra Pradesh","Arunachal Pradesh ","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli","Daman and Diu","Lakshadweep","National Capital Territory of Delhi","Puducherry"]
+,name='state',required=True)
+],validate=check_form)
+    
+#     put_markdown("`info = %r`" % info)
+    
+#     put_text(info['name'],info['age'],info['password'],info['state'])
+    insert_details(info)
+    pywebio.session.hold()
             
         
 def display_recommendations(document_scores):
