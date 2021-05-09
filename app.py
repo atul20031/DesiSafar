@@ -36,10 +36,10 @@ nltk.download('wordnet')
 
 from rank_bm25 import BM25Okapi
 from nltk.corpus import stopwords
-import tensorflow.keras.layers as layers
-import tensorflow.keras as keras
-keras.backend.clear_session()
-encoding_dim = 53255
+# import tensorflow.keras.layers as layers
+# import tensorflow.keras as keras
+# keras.backend.clear_session()
+# encoding_dim = 53255
 from surprise import Dataset
 from surprise import Reader
 import pandas as pd 
@@ -407,7 +407,7 @@ def explore_city(count):
 
 
 def select_recommendation_system():
-    recommendation_system = select('Which type of recommendation system would you prefer?', ['BM25 based Recommendation System', 'TF-IDF(Content based)','Count-Vectorizer(Content Based)','Word2Vec(Content Based)','Collaborative Filtering','Efficient Query Processing'])
+    recommendation_system = select('Which type of recommendation system would you prefer?', ['BM25 based Recommendation System', 'TF-IDF(Content based)','Count-Vectorizer(Content Based)','Word2Vec(Content Based)','Collaborative Filtering'])
     global total_time
     #BM25 based Recommendation System
     if(recommendation_system == 'BM25 based Recommendation System'):
