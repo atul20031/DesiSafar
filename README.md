@@ -1,6 +1,5 @@
 # DesiSafar
-
-Travel Destination  Hybrid Recommendation System [Python + PyWebIO + Flask + Heroku]
+Hybrid Travel Recommendation System [Python + PyWebIO + Flask + Heroku] - DesiSafar is a hybrid travel Recommnedation system for various tourist destinations in India.
 
 Combined Recommender.ipynb - This file contains the script of various baselines models that we have for our travel recommendation system. These models uses various techniques such as TF-IDF, CountVectorizer etc. to find similarities between places and recommend the places based on these similarities.
 
