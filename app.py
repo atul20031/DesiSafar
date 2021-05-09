@@ -60,7 +60,7 @@ total_time = 0
 
 
 # def get_recommendations_score(user_id):
-data2 = pd.read_excel('ratings_data.csv')
+data2 = pd.read_csv('ratings_data.csv')
 data = data2
 poptable = pd.read_csv('poptable.csv')
 poptable['State.Name'] = pd.Series(poptable['State.Name'], dtype="string")
