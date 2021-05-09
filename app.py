@@ -60,8 +60,8 @@ total_time = 0
 
 
 # def get_recommendations_score(user_id):
-# data2 = pd.read_excel('ratings_data.xlsx')
-# data = data2
+data2 = pd.read_excel('ratings_data.csv')
+data = data2
 poptable = pd.read_csv('poptable.csv')
 poptable['State.Name'] = pd.Series(poptable['State.Name'], dtype="string")
 data3  = pd.read_csv('final_dataset_wo_duplicates.csv')
@@ -71,10 +71,10 @@ num_to_city = dict()
 k=1
 cities_rated=0
 print('Imports done')
-# for i in range(3,len(data.columns)):
-#     city_to_num[data.columns[i]] = k 
-#     num_to_city[k] = data.columns[i]
-#     k+=1
+for i in range(3,len(data.columns)):
+    city_to_num[data.columns[i]] = k 
+    num_to_city[k] = data.columns[i]
+    k+=1
 #create userid cityid rating
 print('Imports and mapping done')
 # res = []
