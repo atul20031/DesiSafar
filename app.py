@@ -50,7 +50,7 @@ from surprise import Dataset
 from surprise.model_selection import cross_validate
 from scipy import spatial
 from surprise import KNNWithMeans
-
+import random
 
 
 dataset2 = pd.read_csv('wiki_voyage_correct.csv')
@@ -348,20 +348,23 @@ def fun():
         set_processbar('bar', i / 10)
         time.sleep(0.1)
     for place in cities:
-        put_html('<hr>')
-        put_markdown("# *`%s`*" % place)
-        pic = 'Images/' + str(place) + '.jpg'
-        img = open(pic, 'rb').read()
-        put_image(img, width='1500px')
-        desc = description[count]
-        desc = desc.strip()
-        desc = desc.replace('-','')
-        put_text(desc)
-        put_buttons([dict(label='Explore', value=str(count), color='primary')],onclick=explore_city)
+        temp_num=random.randint(0, 9)
+        if(temp_num==1):
+            put_html('<hr>')
+            put_markdown("# *`%s`*" % place)
+            pic = 'Images/' + str(place) + '.jpg'
+            img = open(pic, 'rb').read()
+            put_image(img, width='1500px')
+            desc = description[count]
+            desc = desc.strip()
+            desc = desc.replace('-','')
+            put_text(desc)
+            put_buttons([dict(label='Explore', value=str(count), color='primary')],onclick=explore_city)
         count+=1
         #put_image(img) to get the original size
     #style(put_text('In case of copyright issues, please drop an email to rishabh20118@iiitd.ac.in'), 'color:red')
 #     put_markdown("# *In case of copyright issues, please drop an email to `rishabh20118@iiitd.ac.in`*")
+    put_buttons(['Explore more'], onclick=[fun])
     img = open('Images/India_1.jpg', 'rb').read()
     pywebio.session.hold()
     put_image(img, width='1500px')
