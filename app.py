@@ -221,7 +221,7 @@ def word2vec_sim_score(q,doc_list):
   for doc in doc_list:
     stemmed_doc_list.append(doc.split(" "))
   # print(stemmed_doc_list)
-  word2vec = Word2Vec(stemmed_doc_list,min_count=1,size=1000)
+  word2vec = Word2Vec(stemmed_doc_list,min_count=1,vector_size=1000)
   for index,row in enumerate(stemmed_doc_list):
     model_vector = (np.mean([word2vec.wv[token] for token in row], axis=0)).tolist()
     doc_vector.append(model_vector)
