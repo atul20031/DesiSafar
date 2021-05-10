@@ -348,7 +348,7 @@ def fun():
         set_processbar('bar', i / 10)
         time.sleep(0.1)
     for place in cities:
-        temp_num=random.randint(0, 9)
+        temp_num=random.randint(0, 15)
         if(temp_num==1):
             put_html('<hr>')
             put_markdown("# *`%s`*" % place)
